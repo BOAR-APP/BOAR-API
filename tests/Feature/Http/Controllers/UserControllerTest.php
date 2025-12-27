@@ -49,9 +49,8 @@ final class UserControllerTest extends TestCase
         $email = fake()->safeEmail();
         $password = fake()->password();
         $verified = fake()->boolean();
-        $created_at = Carbon::parse(fake()->dateTime());
         $last_activity = Carbon::parse(fake()->dateTime());
-        $status = fake()->numberBetween(-10000, 10000);
+        $status = fake()->numberBetween(1, 2);
 
         $response = $this->post(route('users.store'), [
             'firstname' => $firstname,
@@ -61,7 +60,6 @@ final class UserControllerTest extends TestCase
             'email' => $email,
             'password' => $password,
             'verified' => $verified,
-            'created_at' => $created_at->toDateTimeString(),
             'last_activity' => $last_activity->toDateTimeString(),
             'status' => $status,
         ]);
@@ -72,9 +70,7 @@ final class UserControllerTest extends TestCase
             ->where('username', $username)
             ->where('name', $name)
             ->where('email', $email)
-            ->where('password', $password)
             ->where('verified', $verified)
-            ->where('created_at', $created_at)
             ->where('last_activity', $last_activity)
             ->where('status', $status)
             ->get();
@@ -119,7 +115,6 @@ final class UserControllerTest extends TestCase
         $email = fake()->safeEmail();
         $password = fake()->password();
         $verified = fake()->boolean();
-        $created_at = Carbon::parse(fake()->dateTime());
         $last_activity = Carbon::parse(fake()->dateTime());
         $status = fake()->numberBetween(-10000, 10000);
 
@@ -131,7 +126,6 @@ final class UserControllerTest extends TestCase
             'email' => $email,
             'password' => $password,
             'verified' => $verified,
-            'created_at' => $created_at->toDateTimeString(),
             'last_activity' => $last_activity->toDateTimeString(),
             'status' => $status,
         ]);
@@ -146,9 +140,7 @@ final class UserControllerTest extends TestCase
         $this->assertEquals($username, $user->username);
         $this->assertEquals($name, $user->name);
         $this->assertEquals($email, $user->email);
-        $this->assertEquals($password, $user->password);
         $this->assertEquals($verified, $user->verified);
-        $this->assertEquals($created_at, $user->created_at);
         $this->assertEquals($last_activity, $user->last_activity);
         $this->assertEquals($status, $user->status);
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class UserStoreRequest extends FormRequest
 {
@@ -25,9 +26,8 @@ class UserStoreRequest extends FormRequest
             'username' => ['required', 'string', 'unique:users,username'],
             'name' => ['required', 'string'],
             'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'password'],
+            'password' => ['required', 'string', Password::defaults()],
             'verified' => ['required'],
-            'created_at' => ['required'],
             'last_activity' => ['required'],
             'status' => ['required', 'integer'],
             'photo_profile' => ['nullable', 'string'],
