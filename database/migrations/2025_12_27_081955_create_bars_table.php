@@ -17,13 +17,13 @@ return new class extends Migration
             $table->string('location');
             $table->string('city');
             $table->string('postal_code');
-            $table->decimal('latitude', 10, 8);
-            $table->decimal('longitude', 10, 8);
+            $table->decimal('latitude', 12, 8);
+            $table->decimal('longitude', 12, 8);
             $table->string('description');
             $table->string('image')->nullable();
             $table->string('logo')->nullable();
             $table->string('mail')->nullable();
-            $table->integer('phone_number')->nullable();
+            $table->string('phone_number')->nullable();
             $table->timestamps();
         });
     }
