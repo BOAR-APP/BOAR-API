@@ -25,7 +25,7 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'verified' => fake()->boolean(),
             'last_activity' => fake()->dateTime(),
-            'status' => fake()->numberBetween(-10000, 10000),
+            'status' => fake()->numberBetween(1, 2),
             'photo_profile' => fake()->word(),
             'remember_token' => Str::random(10),
             'email_verified_at' => now(),
