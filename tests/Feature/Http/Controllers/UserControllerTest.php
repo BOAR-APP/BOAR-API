@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 use JMac\Testing\Traits\AdditionalAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -113,7 +114,7 @@ final class UserControllerTest extends TestCase
         $username = fake()->userName();
         $name = fake()->name();
         $email = fake()->safeEmail();
-        $password = fake()->password();
+        $password = Hash::make('password');
         $verified = fake()->boolean();
         $last_activity = Carbon::parse(fake()->dateTime());
         $status = fake()->numberBetween(-10000, 10000);
