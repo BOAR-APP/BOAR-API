@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('recommendations', function (Blueprint $table) {
-            $table->id()->foreign('bar.id');
+            $table->id();
+            $table->foreign('id')->references('id')->on('bars')->onDelete('cascade');
             $table->timestamps();
         });
     }

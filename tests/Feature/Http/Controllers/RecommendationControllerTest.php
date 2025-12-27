@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Bar;
 use App\Models\Recommendation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -41,12 +42,18 @@ final class RecommendationControllerTest extends TestCase
     #[Test]
     public function store_saves(): void
     {
-        $response = $this->post(route('recommendations.store'));
+        $bar = Bar::factory()->create();
+
+        $response = $this->post(route('recommendations.store'), [
+            'id' => $bar->id,
+        ]);
 
         $response->assertCreated();
         $response->assertJsonStructure([]);
 
-        $this->assertDatabaseHas(recommendations, [ /* ... */ ]);
+        $this->assertDatabaseHas('recommendations', [
+            'id' => $bar->id,
+        ]);
     }
 
 
