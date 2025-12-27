@@ -1,0 +1,61 @@
+models:
+  User:
+    id: string primary
+    firstname: string
+    lastname: string
+    username: string unique
+    name: string
+    email: string unique
+    password: string
+    verified: boolean
+    created_at: dateTime
+    last_activity: dateTime
+    status: integer
+    photo_profile: string nullable
+  Review:
+    id: string primary foreign:bar.id
+    rate: integer
+    comment: string nullable
+  Bar:
+    id: string primary
+    name: string
+    location: string
+    city: string
+    postal_code: string
+    latitude: decimal:10,8
+    longitude: decimal:10,8
+    description: string
+    image: string nullable
+    logo: string nullable
+    mail: string nullable
+    phone_number: integer nullable
+  Consumable:
+    id: string primary foreign:bar.id
+    name: string
+    price: decimal:5,2 nullable
+    is_drink: boolean
+    description: string nullable
+  ConsumableType:
+    id: string primary foreign:consumable.id
+    name: string
+  Recommendation:
+    id: string primary foreign:bar.id
+
+
+controllers:
+  User:
+    resource: api
+  Review:
+    resource: api
+  Bar:
+    resource: api
+  Consumable:
+    resource: api
+  ConsumableType:
+    resource: api
+  Recommendation:
+    resource: api
+
+seeders: User, Review, Bar, Consumable, ConsumableType, Recommendation
+
+
