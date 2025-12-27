@@ -37,6 +37,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
     /**
@@ -50,6 +51,8 @@ class User extends Authenticatable
             'verified' => 'boolean',
             'created_at' => 'datetime',
             'last_activity' => 'datetime',
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
         ];
     }
 }
