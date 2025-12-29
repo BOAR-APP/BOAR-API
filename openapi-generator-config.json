@@ -1,0 +1,11 @@
+{
+    "library": "jvm-retrofit2",
+    "useCoroutines": true,
+    "serializationLibrary": "moshi",
+    "packageName": "com.boar.api",
+    "artifactId": "boar",
+    "groupId": "com.boar",
+    "artifactVersion": "1.0.0",
+    "enumPropertyNaming": "UPPERCASE",
+    "dateLibrary": "java8"
+}
