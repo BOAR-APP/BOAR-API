@@ -21,15 +21,11 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'firstname' => ['required', 'string'],
-            'lastname' => ['required', 'string'],
-            'username' => ['required', 'string', 'unique:users,username'],
-            'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'string', Password::defaults()],
-            'verified' => ['required'],
-            'last_activity' => ['required'],
-            'status' => ['required', 'integer'],
-            'photo_profile' => ['nullable', 'string'],
+            'firstname' => ['sometimes', 'string'],
+            'lastname' => ['sometimes', 'string'],
+            'username' => ['sometimes', 'string', 'unique:users,username,'.$this->user()->id],
+            'email' => ['sometimes', 'email', 'unique:users,email,'.$this->user()->id],
+            'photo_profile' => ['sometimes', 'string'],
         ];
     }
 }

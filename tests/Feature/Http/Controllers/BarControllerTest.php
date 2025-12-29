@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\BarController
+ * @see \App\Http\Controllers\Api\BarController
  */
 final class BarControllerTest extends TestCase
 {
@@ -32,7 +32,7 @@ final class BarControllerTest extends TestCase
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\BarController::class,
+            \App\Http\Controllers\Api\BarController::class,
             'store',
             \App\Http\Requests\BarStoreRequest::class
         );
@@ -92,7 +92,7 @@ final class BarControllerTest extends TestCase
     public function update_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\BarController::class,
+            \App\Http\Controllers\Api\BarController::class,
             'update',
             \App\Http\Requests\BarUpdateRequest::class
         );

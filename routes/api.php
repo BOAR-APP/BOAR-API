@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\BarController;
-use App\Http\Controllers\ConsumableController;
-use App\Http\Controllers\RecommendationController;
-use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\BarController;
+use App\Http\Controllers\Api\ConsumableController;
+use App\Http\Controllers\Api\RecommendationController;
+use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -28,6 +29,9 @@ Route::get('recommendations/{recommendation}', [RecommendationController::class,
 //route propre à un user
 Route::middleware(['auth:sanctum', 'ability:user,admin'])->group(function () {
     Route::get('me', [AuthController::class, 'me']);
+    Route::patch('me',  [AuthController::class, 'updateMe']);
+    Route::delete('me',  [AuthController::class, 'deleteMe']);
+
     Route::post('logout', [AuthController::class, 'logout']);
 });
 /*

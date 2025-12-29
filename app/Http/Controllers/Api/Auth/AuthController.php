@@ -1,19 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\Controller;
 use App\Http\Requests\Api\LoginRequest;
 use App\Http\Requests\Api\RegisterRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function register(RegisterRequest $request): \Illuminate\Http\JsonResponse
+    public function register(RegisterRequest $request): JsonResponse
     {
         $validated = $request->safe()->except('password');
 
@@ -35,7 +37,7 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(LoginRequest $request): \Illuminate\Http\JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
 
         $user = User::where('email', $request->email)->first();
@@ -57,17 +59,36 @@ class AuthController extends Controller
         ]);
     }
 
-    public function me(Request $request): \Illuminate\Http\JsonResponse
+    public function me(Request $request): JsonResponse
     {
         return response()->json([
             'user' => new UserResource($request->user())
         ]);
     }
-    public function logout(Request $request): \Illuminate\Http\JsonResponse
+    public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
         return response()->json([
             'message' => 'Déconnecté avec succès'
         ]);
+    }
+
+    public function updateMe(UserUpdateRequest $request): JsonResponse
+    {
+        $user = $request->user();
+        $user->update($request->validated());
+
+        return response()->json([
+            'user' => new UserResource($user),
+        ]);
+    }
+
+    public function deleteMe(Request $request): JsonResponse
+    {
+        $request->user()->tokens()->delete();
+        $user = $request->user();
+        $user->delete();
+
+        return response()->json(null, 204);
     }
 }
