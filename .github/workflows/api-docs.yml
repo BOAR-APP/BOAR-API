@@ -41,7 +41,9 @@ jobs:
       - name: Export OpenAPI Specification
         run: php artisan scramble:export --path=docs/openapi.json
         env:
-          DB_CONNECTION: array
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ':memory:'
+
 
       - name: Setup Swagger UI
         run: |
