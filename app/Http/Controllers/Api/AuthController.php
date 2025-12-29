@@ -56,4 +56,18 @@ class AuthController extends Controller
             'abilities' => $abilities,
         ]);
     }
+
+    public function me(Request $request): \Illuminate\Http\JsonResponse
+    {
+        return response()->json([
+            'user' => new UserResource($request->user())
+        ]);
+    }
+    public function logout(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->user()->currentAccessToken()->delete();
+        return response()->json([
+            'message' => 'Déconnecté avec succès'
+        ]);
+    }
 }

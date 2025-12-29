@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Consumable;
 use App\Models\ConsumableType;
 use App\Models\Recommendation;
 use App\Models\Review;
@@ -19,7 +20,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory(10)->create();
-        ConsumableType::factory()->count(50)->create();
+        Consumable::factory()->count(50)->create();
         ConsumableType::factory()->count(10)->create();
         Recommendation::factory()->count(15)->create();
         Review::factory()->count(100)->create();
