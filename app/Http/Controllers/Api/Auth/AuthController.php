@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Api\Controller;
+use App\Http\Requests\Api\ChangePasswordRequest;
 use App\Http\Requests\Api\LoginRequest;
 use App\Http\Requests\Api\RegisterRequest;
 use App\Http\Requests\UserUpdateRequest;
@@ -90,5 +91,21 @@ class AuthController extends Controller
         $user->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        $user = $request->user();
+        if(!$user || !Hash::check($request->current_password, $user->password)){
+            throw ValidationException::withMessages([
+                'password' => ['Les mot de passe sont incorrects.'],
+            ]);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+        return response()->json([
+            "message" => "Mot de passe modifié avec succès"
+        ]);
     }
 }

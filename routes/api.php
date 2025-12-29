@@ -33,6 +33,9 @@ Route::middleware(['auth:sanctum', 'ability:user,admin'])->group(function () {
     Route::delete('me',  [AuthController::class, 'deleteMe']);
 
     Route::post('logout', [AuthController::class, 'logout']);
+
+    Route::post('password/change', [AuthController::class, 'changePassword']);
+
 });
 /*
 Route::apiResource('users', App\Http\Controllers\UserController::class);
