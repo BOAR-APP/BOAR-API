@@ -46,7 +46,6 @@ final class UserControllerTest extends TestCase
         $firstname = fake()->firstName();
         $lastname = fake()->lastName();
         $username = fake()->userName();
-        $name = fake()->name();
         $email = fake()->safeEmail();
         $password = fake()->password();
         $verified = fake()->boolean();
@@ -57,7 +56,6 @@ final class UserControllerTest extends TestCase
             'firstname' => $firstname,
             'lastname' => $lastname,
             'username' => $username,
-            'name' => $name,
             'email' => $email,
             'password' => $password,
             'verified' => $verified,
@@ -69,7 +67,6 @@ final class UserControllerTest extends TestCase
             ->where('firstname', $firstname)
             ->where('lastname', $lastname)
             ->where('username', $username)
-            ->where('name', $name)
             ->where('email', $email)
             ->where('verified', $verified)
             ->where('last_activity', $last_activity)
@@ -112,7 +109,6 @@ final class UserControllerTest extends TestCase
         $firstname = fake()->firstName();
         $lastname = fake()->lastName();
         $username = fake()->userName();
-        $name = fake()->name();
         $email = fake()->safeEmail();
         $password = Hash::make('password');
         $verified = fake()->boolean();
@@ -123,7 +119,6 @@ final class UserControllerTest extends TestCase
             'firstname' => $firstname,
             'lastname' => $lastname,
             'username' => $username,
-            'name' => $name,
             'email' => $email,
             'password' => $password,
             'verified' => $verified,
@@ -139,7 +134,6 @@ final class UserControllerTest extends TestCase
         $this->assertEquals($firstname, $user->firstname);
         $this->assertEquals($lastname, $user->lastname);
         $this->assertEquals($username, $user->username);
-        $this->assertEquals($name, $user->name);
         $this->assertEquals($email, $user->email);
         $this->assertEquals($verified, $user->verified);
         $this->assertEquals($last_activity, $user->last_activity);

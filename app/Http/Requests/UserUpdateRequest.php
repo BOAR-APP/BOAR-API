@@ -24,7 +24,6 @@ class UserUpdateRequest extends FormRequest
             'firstname' => ['required', 'string'],
             'lastname' => ['required', 'string'],
             'username' => ['required', 'string', 'unique:users,username'],
-            'name' => ['required', 'string'],
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'string', Password::defaults()],
             'verified' => ['required'],

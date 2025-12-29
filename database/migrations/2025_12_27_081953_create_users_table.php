@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('firstname');
             $table->string('lastname');
             $table->string('username')->unique();
-            $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
             $table->boolean('verified');
