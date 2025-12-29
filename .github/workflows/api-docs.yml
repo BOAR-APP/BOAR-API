@@ -32,8 +32,16 @@ jobs:
       - name: Install Dependencies
         run: composer install --no-dev --optimize-autoloader
 
+      - name: Prepare Laravel
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          mkdir -p docs
+
       - name: Export OpenAPI Specification
         run: php artisan scramble:export --path=docs/openapi.json
+        env:
+          DB_CONNECTION: array
 
       - name: Setup Swagger UI
         run: |
