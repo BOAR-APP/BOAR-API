@@ -38,34 +38,40 @@ jobs:
           php artisan key:generate
           mkdir -p docs
 
-      - name: Export OpenAPI Specification
-        run: php artisan scramble:export --path=docs/openapi.json
+      - name: Export and Convert OpenAPI Specification
+        run: |
+            php artisan scramble:export --path=docs/openapi-temp.json
+            php -r '
+            $file = "docs/openapi-temp.json";
+            $output = "docs/openapi.json";
+            $data = json_decode(file_get_contents($file), true);
+            $data["openapi"] = "3.0.3";
+            function convertNullableTypes(&$item) {
+                if (!is_array($item)) return;
+                foreach ($item as $key => &$value) {
+                    if ($key === "type" && is_array($value) && in_array("null", $value, true)) {
+                        $nonNullTypes = array_values(array_diff($value, ["null"]));
+                        if (count($nonNullTypes) === 1) {
+                            $item["type"] = $nonNullTypes[0];
+                            $item["nullable"] = true;
+                        } elseif (count($nonNullTypes) > 1) {
+                            $item["type"] = $nonNullTypes;
+                            $item["nullable"] = true;
+                        }
+                    } elseif (is_array($value)) {
+                        convertNullableTypes($value);
+                    }
+                }
+            }
+            convertNullableTypes($data);
+            file_put_contents($output, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+            unlink($file);
+            '
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: ':memory:'
 
-      - name: Fix nullable fiels
-        run: |
-          php -r '
-          $openapi = json_decode(file_get_contents("docs/openapi.json"), true);
 
-          function fixNullableTypes(&$schema) {
-              if (is_array($schema)) {
-                  foreach ($schema as $key => &$value) {
-                      if ($key === "type" && is_array($value) && in_array("null", $value)) {
-                          $types = array_diff($value, ["null"]);
-                          $schema["type"] = reset($types);
-                          $schema["nullable"] = true;
-                      } else {
-                          fixNullableTypes($value);
-                      }
-                  }
-              }
-          }
-
-          fixNullableTypes($openapi);
-          file_put_contents("docs/openapi.json", json_encode($openapi, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-          '
       - name: Setup Swagger UI
         run: |
           curl -L https://github.com/swagger-api/swagger-ui/archive/refs/tags/v5.10.5.tar.gz -o swagger-ui.tar.gz
