@@ -9,6 +9,16 @@ class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
+     *
+     * @return array{
+     *     id: int,
+     *     firstname: string,
+     *     lastname: string,
+     *     username: string,
+     *     email: string,
+     *     last_activity: string,
+     *     photo_profile: string|null
+     * }
      */
     public function toArray(Request $request): array
     {
