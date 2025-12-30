@@ -44,7 +44,28 @@ jobs:
           DB_CONNECTION: sqlite
           DB_DATABASE: ':memory:'
 
+      - name: Fix nullable fiels
+        run: |
+          php -r '
+          $openapi = json_decode(file_get_contents("docs/openapi.json"), true);
 
+          function fixNullableTypes(&$schema) {
+              if (is_array($schema)) {
+                  foreach ($schema as $key => &$value) {
+                      if ($key === "type" && is_array($value) && in_array("null", $value)) {
+                          $types = array_diff($value, ["null"]);
+                          $schema["type"] = reset($types);
+                          $schema["nullable"] = true;
+                      } else {
+                          fixNullableTypes($value);
+                      }
+                  }
+              }
+          }
+
+          fixNullableTypes($openapi);
+          file_put_contents("docs/openapi.json", json_encode($openapi, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+          '
       - name: Setup Swagger UI
         run: |
           curl -L https://github.com/swagger-api/swagger-ui/archive/refs/tags/v5.10.5.tar.gz -o swagger-ui.tar.gz
