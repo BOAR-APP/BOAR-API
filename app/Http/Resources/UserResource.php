@@ -9,16 +9,6 @@ class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
-     *
-     * @return array{
-     *     id: int,
-     *     firstname: string,
-     *     lastname: string,
-     *     username: string,
-     *     email: string,
-     *     last_activity: string,
-     *     photo_profile: ?string
-     * }
      */
     public function toArray(Request $request): array
     {
@@ -29,6 +19,9 @@ class UserResource extends JsonResource
             'username' => $this->username,
             'email' => $this->email,
             'last_activity' => $this->last_activity,
+            /**
+             * @var string|null
+             */
             'photo_profile' => $this->photo_profile,
         ];
     }

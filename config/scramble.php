@@ -20,6 +20,8 @@ return [
      */
     'export_path' => 'api.json',
 
+    'openapi_version' => '3.0.3',
+
     'info' => [
         /*
          * API version.
