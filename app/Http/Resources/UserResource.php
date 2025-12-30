@@ -17,7 +17,7 @@ class UserResource extends JsonResource
      *     username: string,
      *     email: string,
      *     last_activity: string,
-     *     photo_profile: string|null
+     *     photo_profile: ?string
      * }
      */
     public function toArray(Request $request): array
