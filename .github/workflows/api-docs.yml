@@ -39,7 +39,7 @@ jobs:
           mkdir -p docs
 
       - name: Export OpenAPI Specification
-        run: php artisan scramble:export --path=docs/openapi-temp.json
+        run: php artisan scramble:export --path=docs/openapi.json
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: ':memory:'
