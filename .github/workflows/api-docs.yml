@@ -38,47 +38,8 @@ jobs:
           php artisan key:generate
           mkdir -p docs
 
-      - name: Export and Convert OpenAPI Specification
-        run: |
-          php artisan scramble:export --path=docs/openapi-temp.json
-          php -r '
-          $file = "docs/openapi-temp.json";
-          $output = "docs/openapi.json";
-          $data = json_decode(file_get_contents($file), true);
-          $data["openapi"] = "3.0.3";
-
-          function convertToOpenAPI30(&$item) {
-              if (!is_array($item)) return;
-              foreach ($item as $key => &$value) {
-                  if ($key === "type" && is_array($value) && in_array("null", $value, true)) {
-                      $nonNullTypes = array_values(array_diff($value, ["null"]));
-                      if (count($nonNullTypes) === 1) {
-                          $item["type"] = $nonNullTypes[0];
-                          $item["nullable"] = true;
-                      } elseif (count($nonNullTypes) > 1) {
-                          $item["type"] = $nonNullTypes;
-                          $item["nullable"] = true;
-                      }
-                  }
-                  if ($key === "prefixItems") {
-                      if (is_array($value) && count($value) > 0) {
-                          $item["items"] = $value[0];
-                      }
-                      unset($item["prefixItems"]);
-                  }
-                  if ($key === "additionalItems") {
-                      unset($item["additionalItems"]);
-                  }
-                  if (is_array($value)) {
-                      convertToOpenAPI30($value);
-                  }
-              }
-          }
-
-          convertToOpenAPI30($data);
-          file_put_contents($output, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-          unlink($file);
-          '
+      - name: Export OpenAPI Specification
+        run: php artisan scramble:export --path=docs/openapi-temp.json
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: ':memory:'
