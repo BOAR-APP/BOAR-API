@@ -2,7 +2,7 @@ name: Deploy API Documentation
 
 on:
   push:
-    branches: [main, bas/sar]
+    branches: [main, bas/sae]
   workflow_dispatch:
 
 permissions:
