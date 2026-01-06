@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ConsumableTypeStoreRequest;
 use App\Http\Requests\ConsumableTypeUpdateRequest;
 use App\Http\Resources\ConsumableTypeCollection;

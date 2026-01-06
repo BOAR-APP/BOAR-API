@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\RecommendationStoreRequest;
 use App\Http\Requests\RecommendationUpdateRequest;
 use App\Http\Resources\RecommendationCollection;
