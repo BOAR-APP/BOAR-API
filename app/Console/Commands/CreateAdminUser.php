@@ -32,6 +32,7 @@ class CreateAdminUser extends Command
             'verified' => true,
             'last_activity' => now(),
             'status' => 2,
+            'role' => 'admin',
         ]);
 
         $this->info("Admin user created successfully!");

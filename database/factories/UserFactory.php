@@ -28,6 +28,7 @@ class UserFactory extends Factory
             'photo_profile' => fake()->word(),
             'remember_token' => Str::random(10),
             'email_verified_at' => now(),
+            'role' => 'user'
         ];
     }
 

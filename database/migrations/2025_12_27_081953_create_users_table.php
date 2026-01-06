@@ -22,6 +22,7 @@ return new class extends Migration
             $table->dateTime('last_activity');
             $table->integer('status');
             $table->string('photo_profile')->nullable();
+            $table->string('role');
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
             $table->rememberToken();
