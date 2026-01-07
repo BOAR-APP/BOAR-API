@@ -20,6 +20,11 @@ return [
      */
     'export_path' => 'api.json',
 
+    'infer' => [
+        'nullables' => true
+    ],
+
+
     'info' => [
         /*
          * API version.
