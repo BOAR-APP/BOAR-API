@@ -13,8 +13,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2  # Pour détecter les changements
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -24,38 +22,52 @@ jobs:
       - name: Install Dependencies
         run: composer install --no-dev --optimize-autoloader
 
-      #- name: Run Tests
-      #  run: composer test
-      #  env:
-      #    DB_CONNECTION: sqlite
-      #    DB_DATABASE: ':memory:'
-
       - name: Prepare Laravel
         run: |
           cp .env.example .env
           php artisan key:generate
-          mkdir -p docs
 
       - name: Export OpenAPI Specification
-        run: php artisan scramble:export --path=docs/openapi.json
+        run: |
+          mkdir -p docs
+          php artisan scramble:export --path=docs/openapi.json
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: ':memory:'
 
+      - name: Setup Swagger UI
+        run: |
+          curl -L https://github.com/swagger-api/swagger-ui/archive/refs/tags/v5.10.5.tar.gz -o swagger-ui.tar.gz
+          tar -xzf swagger-ui.tar.gz
+          cp -r swagger-ui-*/dist/* docs/
+          sed -i 's|https://petstore.swagger.io/v2/swagger.json|./openapi.json|g' docs/swagger-initializer.js
 
-      - name: Deploy files to VPS
+      - name: Deploy application to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          source: "./*"
+          source: "./"
           target: "/var/www/dev/api"
-          rm: false
+          rm: true
           overwrite: true
           strip_components: 0
+          excludes: |
+            .git,
+            .github,
+            _ide_helper*.php,
+            .phpstorm.meta.php,
+            .editorconfig,
+            .env,
+            .env.example,
+            node_modules,
+            tests,
+            storage/logs/*,
+            .gitignore,
+            .gitattributes
 
-      - name: Setup and migrate on VPS
+      - name: Run migrations and optimize
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -63,37 +75,22 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /var/www/dev/api
-
-            # Copier .env si changé ou inexistant
-            if [ ! -f .env ] || [ "${{ steps.changes.outputs.env_changed }}" != "0" ]; then
-              cp .env.example .env
-              php artisan key:generate
-            fi
-
-            # Créer la base SQLite si besoin
-            touch database/database.sqlite
-
-            # Installer les dépendances si composer.json a changé
-            if [ "${{ steps.changes.outputs.composer_changed }}" != "0" ] || [ ! -d vendor ]; then
-              composer install --no-dev --optimize-autoloader
-            fi
-
-            # Migrations et cache
-            php artisan migrate --force
+            php artisan migrate
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
 
-            # Permissions
-            chmod -R 775 storage bootstrap/cache
-            chown -R deploy:www-data /var/www/dev/api
-
-      - name: Deploy Swagger UI
+      - name: Deploy Swagger documentation
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          source: "openapi/*"
+          source: "docs/*"
           target: "/var/www/dev/swagger"
+          strip_components: 1
 
+      - name: Notify deployment success
+        if: success()
+        run: |
+          echo "✅ Déploiement DEV réussi - $(git rev-parse --short HEAD)"
