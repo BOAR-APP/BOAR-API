@@ -8,8 +8,16 @@ use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
-
+Route::get('/', function () {
+    return response()->json([
+        'name' => 'BOAR API',
+        'version' => '1.0.0',
+        'environment' => config('app.env'),
+        'documentation' => 'https://swagger-dev.boar-caen.fr',
+    ]);
+});
 //route public
+/*
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
@@ -25,7 +33,7 @@ Route::get('consumables/{consumable}', [ConsumableController::class, 'show']);
 
 Route::get('recommendations', [RecommendationController::class, 'index']);
 Route::get('recommendations/{recommendation}', [RecommendationController::class, 'show']);
-
+*/
 //route propre à un user
 Route::middleware(['auth:sanctum', 'ability:user,admin'])->group(function () {
     Route::get('me', [AuthController::class, 'me']);
