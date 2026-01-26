@@ -30,30 +30,18 @@ jobs:
       #    DB_CONNECTION: sqlite
       #    DB_DATABASE: ':memory:'
 
-      - name: Export OpenAPI for Dev
+      - name: Prepare Laravel
         run: |
           cp .env.example .env
           php artisan key:generate
-          mkdir -p openapi
-          php artisan scramble:export --path=openapi/openapi.json
+          mkdir -p docs
 
-      - name: Detect changes
-        id: changes
-        run: |
-          echo "Déploiement de $(git rev-parse --short HEAD)"
-          prev="${{ github.event.before }}"
-          if [ "$prev" = "0000000000000000000000000000000000000000" ]; then
-            prev="HEAD~1"
-          fi
+      - name: Export OpenAPI Specification
+        run: php artisan scramble:export --path=docs/openapi.json
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ':memory:'
 
-          composer_changed=$(git diff --name-only $prev HEAD -- composer.json composer.lock | wc -l)
-          env_changed=$(git diff --name-only $prev HEAD -- .env.example | wc -l)
-
-          echo "composer_changed=$composer_changed" >> $GITHUB_OUTPUT
-          echo "env_changed=$env_changed" >> $GITHUB_OUTPUT
-
-          echo "Files changed since $prev:"
-          git log --oneline --name-only $prev..HEAD
 
       - name: Deploy files to VPS
         uses: appleboy/scp-action@v0.1.7
@@ -109,18 +97,3 @@ jobs:
           source: "openapi/*"
           target: "/var/www/dev/swagger"
 
-      - name: Notify deployment
-        if: success()
-        run: |
-          echo "✅ Déploiement réussi de $(git rev-parse --short HEAD) en DEV"
-
-      - name: Rollback on failure
-        if: failure()
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            echo "❌ Échec du déploiement, restauration nécessaire"
-            # Ici tu peux ajouter une logique de rollback si besoin
