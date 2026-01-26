@@ -66,7 +66,7 @@ jobs:
         id: deploy_app
         uses: burnett01/rsync-deployments@7.0.1
         with:
-          switches: -avzr --delete --exclude='.git' --exclude='.github' --exclude='_ide_helper*.php' --exclude='.env' --exclude='.env.example' --exclude='node_modules' --exclude='tests' --exclude='storage/logs/*' --exclude='docs'
+          switches: -avzr --delete --exclude='.git' --exclude='.github' --exclude='_ide_helper*.php' --exclude='.env' --exclude='.env.example' --exclude='node_modules' --exclude='tests' --exclude='storage/logs/*' --exclude='docs' --exclude='storage/*'
           path: ./
           remote_path: /var/www/${{ secrets.DEPLOY_VPS_DIR }}/
           remote_host: ${{ secrets.VPS_HOST }}
