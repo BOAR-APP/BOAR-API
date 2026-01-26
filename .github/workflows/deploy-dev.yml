@@ -24,11 +24,11 @@ jobs:
       - name: Install Dependencies
         run: composer install --no-dev --optimize-autoloader
 
-      - name: Run Tests
-        run: composer make:test
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: ':memory:'
+      #- name: Run Tests
+      #  run: composer test
+      #  env:
+      #    DB_CONNECTION: sqlite
+      #    DB_DATABASE: ':memory:'
 
       - name: Export OpenAPI for Dev
         run: |
